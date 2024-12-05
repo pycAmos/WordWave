@@ -1,0 +1,247 @@
+/* 确保背景 iframe 全屏覆盖 */
+.background-iframe {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    z-index: -1; /* 保证背景在所有内容后面 */
+    transform: scale(1.4); /* 可选的缩放效果 */
+    transform-origin: center center;
+}
+
+/* 禁用滚动条 */
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+}
+
+/* 牌桌容器 */
+.table-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%; /* 牌桌宽度 */
+    height: 60%; /* 牌桌高度 */
+    background-color: rgba(0, 0, 0, 0); /* 完全透明 */
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* 添加阴影效果 */
+    z-index: 1;
+}
+
+/* AI玩家区域 */
+.ai-player {
+    position: absolute;
+    top: -60px; /* 牌桌上方距离 */
+    width: 100%;
+    text-align: center;
+    font-size: 24px;
+    color: white;
+}
+
+/* Player玩家区域 */
+.player {
+    position: absolute;
+    bottom: -60px; /* 牌桌下方距离 */
+    width: 100%;
+    text-align: center;
+    font-size: 24px;
+    color: white;
+}
+
+/* 头像框样式 */
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 4px solid #ffb84d; /* 淡橙色边框 */
+    overflow: hidden;
+    position: absolute;
+    z-index: 2;
+}
+
+/* AI玩家头像位置（右侧） */
+.ai-avatar {
+    right: 30px; /* AI头像靠右 */
+    top: 40px; /* 头像上移，位于AI区域上方 */
+}
+
+/* Player玩家头像位置（左侧） */
+.player-avatar {
+    left: 40px; /* Player头像靠左 */
+    bottom: 40px; /* 头像下移，位于Player区域下方 */
+}
+
+/* 头像下方的文本名称样式 */
+.avatar-name {
+    font-size: 18px;
+    color: white;
+    text-align: center; /* 居中显示 */
+}
+
+/* AI玩家名称 */
+.ai-avatar-name {
+    position: absolute;
+    top: 150px; /* 调整AI名称的垂直位置 */
+    right: 65px; /* 与AI头像对齐 */
+    font-weight: bold;
+}
+
+/* Player玩家名称 */
+.player-avatar-name {
+    position: absolute;
+    bottom: 15px; /* 调整Player名称的垂直位置 */
+    left: 60px; /* 与Player头像对齐 */
+    font-weight: bold;
+}
+
+/* Logo样式 */
+.logo {
+    position: absolute;
+    top: 20px; /* 距离页面顶部的距离 */
+    left: 20px; /* 距离页面左侧的距离 */
+    width: 150px; /* 放大1.5倍，调整宽度 */
+    height: auto; /* 自动适应高度 */
+    z-index: 2; /* 确保logo位于其他内容的上方 */
+}
+
+/* 调整牌库按钮样式 */
+.card-deck-button {
+    position: absolute;
+    left: 5%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 180px;
+    background: url('assets/images/DECK.png') no-repeat center center;
+    background-size: contain;
+    border: none;
+    cursor: pointer;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white; /* 数字颜色 */
+    font-size: 24px; /* 数字大小 */
+    font-weight: bold; /* 数字加粗 */
+}
+
+/* 剩余卡片数量 */
+.deck-count {
+    position: absolute;
+    top: 100px;
+    left: 25px;
+    background: rgba(0, 0, 0, 0.3); /* 半透明背景 */
+    padding: 5px 10px;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    pointer-events: none; /* 禁止点击 */
+    margin-top: 380px;
+    width: 54px;
+    display: flex;
+    justify-content: center;  /* 水平居中 */
+    align-items: center;      /* 垂直居中 */
+}
+
+/* 牌库按钮下方文字样式 */
+.card-deck-button-text {
+    position: absolute;
+    left: 4%;
+    top: calc(45% + 100px);
+    transform: translateX(-50%); /* 确保文字完全居中 */
+    color: white;            /* 设置文字颜色 */
+    font-size: 24px;         /* 字体大小 */
+    font-weight: bold;       /* 字体加粗 */
+}
+
+/* 右侧按钮区域 */
+.right-buttons {
+    position: absolute;
+    top: 25%;
+    right: 5%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Play Out按钮 */
+.playout-button {
+    background-color: #ffb84d;
+    border: none;
+    padding: 15px 30px;
+    color: white;
+    font-size: 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.playout-button:hover {
+    background-color: #e0992d; /* 悬停时颜色变化 */
+}
+
+/* 数字显示 */
+.number-display {
+    font-size: 36px;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* 数字文字说明 */
+.number-caption {
+    font-size: 14px;
+    color: white;
+    text-align: center;
+}
+
+/* PUNG按钮 */
+.pung-button {
+    background-color: #ff6347;
+    border: none;
+    padding: 15px 30px;
+    color: white;
+    font-size: 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.pung-button:hover {
+    background-color: #e06f45; /* 悬停时颜色变化 */
+}
+
+/* 牌手区域 */
+.ai-box, .player-box {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    box-sizing: border-box;
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+}
+
+.ai-hand, .player-hand {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+/* 手牌的图片 */
+.ai-hand img, .player-hand img {
+    width: 40px;
+    height: 60px;
+    object-fit: cover;
+    cursor: pointer;
+}

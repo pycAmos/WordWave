@@ -1,0 +1,482 @@
+console.log('WordWave™');
+
+//#region  // DOM 和全局变量
+const aiHandDom = document.querySelector('.ai-hand');  // 获取CPU手牌的DOM元素
+const playerHandDom = document.querySelector('.player-hand');  // 获取玩家手牌的DOM元素
+
+const tableContainerDom = document.querySelector('.table-container');  // 获取显示当前牌堆的DOM元素
+const cardDeckDom = document.querySelector('.card-deck-button');  // 获取显示抽牌堆的DOM元素
+
+// 手牌数组
+const aiHand = [];  // 存储AI手牌的数组
+const playerHand = [];  // 存储玩家手牌的数组
+
+const cardDeck = [];  // 存储整副牌的数组
+let tableContainer;  // 当前牌堆，存储正在玩的牌
+
+// 游戏控制变量
+let playerTurn = true;  // 玩家是否轮到出牌，初始为玩家先手
+let gameOn = true;  // 游戏是否进行中，初始为游戏进行中
+let colorPickerIsOpen = false;  // 颜色选择器是否打开
+
+//////////////////////////////////////////////////////////////////////
+
+//#region 预加载图片以加快加载速度
+const imgPreLoad = []  // 存储预加载的图片
+let preLoaded = false  // 标记是否完成图片预加载，初始为false
+
+const preLoadImgs = () => {
+    // 遍历四种颜色（红、绿、蓝、紫、橙、黑）
+    for (let i = 0; i <= 5; i++) {
+        let color
+        // 根据索引设置颜色值
+        if (i === 0) color = 'red'  // 红色
+        if (i === 1) color = 'green'  // 绿色
+        if (i === 2) color = 'blue'  // 蓝色
+        if (i === 3) color = 'purple'  // 紫色
+        if (i === 4) color = 'orange'  // 橙色
+        if (i === 5) color = 'black'  // 黑色
+
+        // 遍历每种颜色下的26张卡牌
+        for (let n = 0; n <= 26; n++) {
+            let img = new Image()  // 创建新的Image对象
+            img.src = 'assets/images/cards/' + color + '_' + i + '.png';   // 设置图片路径，假设文件名格式为 "letter_color.png"
+            imgPreLoad.push(img)  // 将图片对象加入预加载数组
+        }
+    }
+
+    // 将所有预加载的图片添加到当前牌堆（playPileDom）中
+    for (let i = 0; i < imgPreLoad.length; i++) {
+        cardDeck.appendChild(imgPreLoad[i])  // 将每张图片添加到牌堆DOM中
+        cardDeck.innerHTML = ''  // 清空牌堆DOM中的内容
+    }
+}
+
+// #region 卡牌与牌组管理
+class Card {
+    constructor(rgb, value, changeTurn, imgSrc) {
+        // 构造函数用于创建卡牌对象，包含以下属性：
+        this.color = rgb  // 卡牌的颜色
+        this.value = value  // 卡牌的数值或类型
+        this.changeTurn = changeTurn  // 是否改变轮次（例如“跳过”或“反转”)
+        this.src = imgSrc  // 卡牌图像路径
+        this.playedByPlayer = false  // 标记卡牌是否由玩家出过
+    }
+}
+
+const createCard = (rgb, color) => {
+    // 该函数用于创建一副卡牌，遍历字母生成卡牌并加入到牌组（deck）中
+    const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+    const vowels = ['A', 'E', 'I', 'O', 'U']; // 定义元音字母
+
+    for (let i = 0; i < letters.length; i++) {
+        const letter = letters[i];
+
+        // 每个字母卡牌生成1张
+        deck.push(new Card(rgb, letter, 0, true, 0, 'assets/images/cards/' + letter.toUpperCase() + '_' + color.toUpperCase() + '.png'));
+
+        // 如果是元音字母，额外生成5张
+        if (vowels.includes(letter)) {
+            for (let j = 0; j < 5; j++) {
+                deck.push(new Card(rgb, letter, 0, true, 0, 'assets/images/cards/' + letter.toUpperCase() + '_' + color.toUpperCase() + '.png'));
+            }
+        }
+    }
+}
+
+
+
+
+const createDeck = () => {
+    // 销毁之前的牌组
+    deck.length = 0
+
+    // 创建新的牌组
+for (let i = 0; i <= 3; i++) {
+    if (i === 0) {
+        createCard('rgb(255, 6, 0)', 'red')  // 创建红色卡牌
+    }
+    else if (i === 1) {
+        createCard('rgb(0, 170, 69)', 'green')  // 创建绿色卡牌
+    }
+    else if (i === 2) {
+        createCard('rgb(0, 150, 224)', 'blue')  // 创建蓝色卡牌
+    }
+    else if (i === 3) {
+        createCard('rgb(128, 0, 128)', 'purple')  // 创建紫色卡牌
+    }
+    else if (i === 4) {
+        createCard('rgb(255, 165, 0)', 'orange')  // 创建橙色卡牌
+    }
+    else {
+        createCard('rgb(0, 0, 0)', 'black')  // 创建黑色卡牌
+    }
+}
+
+
+    console.log(deck)  // 输出当前的牌组（TODO: 移除）
+}
+
+const shuffleDeck = (deck) => {
+    // Fisher-Yates洗牌算法 - https://www.frankmitchell.org/2015/01/fisher-yates/
+    console.log('shuffling', deck)  // 输出洗牌前的牌组（TODO: 移除）
+
+    // Fisher-Yates洗牌算法
+    for (let i = deck.length - 1; i > 0; i--) {
+        deck[i].playedByPlayer = false  // 重置卡牌的“已出牌”状态
+        let j = Math.floor(Math.random() * (i + 1))  // 随机生成一个索引
+        let temp = deck[i]  // 临时保存当前卡牌
+        deck[i] = deck[j]  // 将卡牌位置交换
+        deck[j] = temp  // 将临时卡牌放到新的位置
+    }
+
+    console.log(deck, 'shuffled')  // 输出洗牌后的牌组（TODO: 移除）
+    // ///////////////////////////////
+    // #endregion
+
+// #region 游戏进程
+const dealCards = () => {
+    // 发牌给玩家和电脑
+    for (let i = 0; i < 7; i++) {
+        // 从牌堆中抽取卡片并发给电脑和玩家
+        aiHand.push(deck.shift())
+        playerHand.push(deck.shift())
+
+        // 在DOM中显示卡片
+        const aiCard = document.createElement('img')
+        aiCard.setAttribute('src', 'assets/images/Card_back.png')  // 电脑的卡片背面
+        aiCard.setAttribute('class', 'ai')
+        aiHandDom.appendChild(aiCard)
+
+        const playerCard = document.createElement('img')
+        playerCard.setAttribute('src', playerHand[i].src)  // 玩家卡片的图像
+        playerCard.setAttribute('class', 'player')
+
+        // 给玩家卡片分配一个id，用于引用正确的卡片对象
+        playerCard.setAttribute('id', i)
+        playerHandDom.appendChild(playerCard)
+    }
+}
+
+const startPlayPile = () => {
+    const playCard = document.createElement('img')
+
+    // 寻找第一张不是动作卡的卡片
+    for (let i = 0; i < deck.length; i++) {
+        if (deck[i].color !== "any" && deck[i].value <= 9) {
+            // 从牌堆中选出第一张有效卡片作为游戏的起始牌
+            tableContainer = deck.splice(i, 1)
+            break
+        }
+    }
+
+    // 设置起始牌的图像
+    tableContainer.setAttribute('src', tableContainer[0].src)
+    // 将起始牌放到游戏堆中
+    tableContainerDom.appendChild(playCard)
+}
+
+const newHand = () => {
+    console.log('new hand')  // 输出创建新手牌的提示
+    gameOn = true
+    // 清空手牌和游戏堆
+    aiHandDom.innerHTML = ''
+    aiHand.length = 0
+    playerHandDom.innerHTML = ''
+    playerHand.length = 0
+    cardDeckDom.innerHTML = ''
+
+    // 创建新的一副牌
+    createDeck()
+    // 洗牌
+    shuffleDeck(deck)
+    // 发牌并设置第一张起始牌
+    dealCards()
+    // 设置第一张有效的游戏卡片
+    startPlayPile()
+
+    if (colorPickerIsOpen) hideColorPicker()  // 如果颜色选择器打开，关闭它
+}
+
+const updatePlayPileDom = () => {
+    cardDeckDom.innerHTML = ''
+
+    // 添加新出牌到游戏堆
+    const newCardImg = document.createElement('img')
+    const imgSrc = playPile[playPile.length - 1].src
+    newCardImg.setAttribute('src', imgSrc)
+    cardDeckDom.appendChild(newCardImg)
+}
+
+const updateHand = (handToUpdate) => {
+    let domToUpdate, cardClass;
+
+    // 判断是更新哪个玩家的手牌
+    if (handToUpdate === aiHand) {
+        domToUpdate = aiHandDom
+        cardClass = 'ai'
+        if (aiVisible) aiVisible = false  // 如果电脑手牌可见，设置为不可见
+    }
+    else {
+        domToUpdate = playerHandDom
+        cardClass = 'player'
+    }
+
+    // 清空手牌的显示
+    domToUpdate.innerHTML = ''
+
+    // 更新手牌显示
+    for (let i = 0; i < handToUpdate.length; i++) {
+        let src
+
+        if (domToUpdate === aiHandDom) {
+            src = 'assets/images/Card_back.png'  // 电脑手牌是背面朝上的
+        }
+        else {
+            src = handToUpdate[i].src  // 玩家手牌显示实际图像
+        }
+
+        const updatedCard = document.createElement('img')
+        updatedCard.setAttribute('src', src)
+        updatedCard.setAttribute('class', cardClass)
+        updatedCard.setAttribute('id', i)  // 设置id为手牌的索引
+        domToUpdate.appendChild(updatedCard)
+    }
+
+    // 如果手牌为空，显示空手牌的占位图
+    if (handToUpdate.length === 0) {
+        const updatedCard = document.createElement('img')
+        updatedCard.setAttribute('src', 'images/empty.png')  // 空手牌占位图
+        updatedCard.setAttribute('class', 'empty')
+        domToUpdate.appendChild(updatedCard)
+    }
+}
+
+const drawCard = (handGetsCard) => {
+    animateDrawCard(handGetsCard)
+    // 检查牌堆是否还有卡片可以抽
+    if (deck.length > 0) {
+        // 抽取牌堆顶部的卡片
+        const newCard = deck.shift()
+        handGetsCard.push(newCard)
+        console.log(handGetsCard, 'drew one card')  // 输出抽卡信息（TODO: 移除）
+    }
+    else {
+        // 洗牌并将洗好的牌堆重新作为牌堆
+        shuffleDeck(cardDeck)
+        for (let i = 0; i <= tableContainer.length - 1; i++) {
+            deck.push(cardDeck[i])  // 将洗好的游戏堆转为新牌堆
+        }
+        cardDeck.length = 1  // 保留最后一张出牌
+
+        // 从新牌堆抽取卡片
+        const newCard = deck.shift()
+        handGetsCard.push(newCard)
+        console.log(handGetsCard, 'drew one card')  // 输出抽卡信息（TODO: 移除）
+    }
+    setTimeout(() => {
+        updateHand(handGetsCard)  // 更新手牌显示
+    }, 500)
+}
+
+const animateDrawCard = (player) => {
+    let playerClass
+    if (player === aiHand) playerClass = 'ai-draw'
+    else playerClass = 'player-draw'
+
+    const drawCardEl = document.querySelector('#draw-card')
+    drawCardEl.classList.remove('hidden')  // 显示抽卡动画
+    setTimeout(() => {
+        drawCardEl.classList.add(playerClass)  // 添加动画类
+        setTimeout(() => {
+            drawCardEl.classList.add('hidden')  // 隐藏动画
+            drawCardEl.classList.remove(playerClass)
+        }, 500)
+    }, 30)
+}
+
+
+const showColorPicker = () => {
+    // 显示颜色选择器
+    const colorPicker = document.querySelector('.color-picker')
+    colorPicker.style.opacity = 1
+    colorPickerIsOpen = true
+
+    // 给颜色按钮添加事件监听
+    document.querySelector('.red').addEventListener('click', (e) => {
+        chooseColor('rgb(255, 6, 0)')  // 红色
+    })
+    document.querySelector('.green').addEventListener('click', (e) => {
+        chooseColor('rgb(0, 170, 69)')  // 绿色
+    })
+    document.querySelector('.blue').addEventListener('click', (e) => {
+        chooseColor('rgb(0, 150, 224)')  // 蓝色
+    })
+    document.querySelector('.yellow').addEventListener('click', (e) => {
+        chooseColor('rgb(255, 222, 0)')  // 黄色
+    })
+}
+
+const chooseColor = (rgb) => {
+    // 选择颜色并应用到当前出的wild卡片上
+    colorButton.play()  // 播放颜色选择音效
+    playPile[playPile.length - 1].color = rgb
+
+    // 隐藏颜色选择器
+    hideColorPicker()
+    playerTurn = false;
+    setTimeout(playCPU, cpuDelay)  // 等待一定时间后让电脑出牌
+}
+
+function hideColorPicker() {
+    const colorPicker = document.querySelector('.color-picker')
+    colorPicker.style.opacity = 0  // 隐藏颜色选择器
+    colorPickerIsOpen = false
+}
+
+const skipOrEndTurn = () => {
+    // 检查是否跳过回合或改变回合
+    if (playPile[playPile.length - 1].changeTurn) {
+        playerTurn = false
+        // 电脑回合
+        setTimeout(playCPU, cpuDelay)
+    }
+}
+// 更新显示玩家轮到谁的名字
+const showTurnOnDom = () => {
+    // 如果是玩家的回合，设置玩家颜色为高亮，CPU为正常
+    if (playerTurn) {
+        document.querySelector('.player-score-title').style.color = 'rgb(100, 150, 150)'
+        document.querySelector('.cpu-score-title').style.color = 'rgb(6, 37, 62)'
+    }
+    // 如果是CPU的回合，设置CPU颜色为高亮，玩家为正常
+    else {
+        document.querySelector('.player-score-title').style.color = 'rgb(6, 37, 62)'
+        document.querySelector('.cpu-score-title').style.color = 'rgb(100, 150, 150)'
+    }
+}
+
+// // 检查是否有获胜者
+// const checkForWinner = () => {
+//     // 检查如果玩家和CPU的分数都未超过游戏结束的分数
+//     if (playerScore < gameOver && cpuScore < gameOver) {
+//         // 继续进行下一回合
+//         if (playerHand.length === 0) {
+//             winRoundFX.play()  // 播放玩家获胜音效
+//             endRound(playerHand)  // 结束回合
+//         }
+//         if (cpuHand.length === 0) {
+//             loseFX.play()  // 播放CPU获胜音效
+//             endRound(cpuHand)  // 结束回合
+//         }
+//     }
+//     else {
+//         // 游戏结束
+//         endGame()
+//     }
+// }
+//
+//     // 结束回合
+// const endRound = (winner) => {
+//     console.log('回合结束') // TODO: 调试输出，之后可以移除
+//     gameOn = false;  // 结束游戏状态
+//     playerTurn = !playerTurn  // 切换回合
+//
+//     // 如果CPU有剩余手牌，显示其手牌
+//     if (cpuHand.length > 0) showCpuCards()
+//
+//     const endOfroundDom = document.querySelector('.end-of-round')  // 获取回合结束的DOM元素
+//     const roundDom = document.querySelector('.round')  // 获取回合显示的DOM元素
+//
+//     // 显示回合结束信息，并根据胜负进行更新
+//     endOfroundDom.classList.remove('hidden')
+//     if (winner === playerHand) roundDom.textContent = '你赢了这一回合！'
+//     else roundDom.textContent = 'CPU赢了这一回合...'
+//
+//     // 3秒后隐藏回合结束信息
+//     setTimeout(() => {
+//         endOfroundDom.classList.add('hidden')  // 隐藏回合结束信息
+//         playerTurn = !playerTurn  // 切换回合
+//         newHand()  // 发新手牌
+//         if (!playerTurn) setTimeout(playCPU, cpuDelay)  // 如果是CPU回合，延迟执行CPU的回合
+//     }, 3000)
+// }
+// // 游戏结束函数
+// const endGame = () => {
+//     console.log('游戏结束') // TODO: 调试输出，之后可以移除
+//     gameOn = false;  // 游戏状态设置为结束
+//     if (cpuHand.length > 0) showCpuCards()  // 如果CPU还有手牌，则展示
+//
+//     const endOfGameDom = document.querySelector('.end-of-game')  // 获取游戏结束的DOM元素
+//     const gameDom = document.querySelector('.game')  // 获取游戏状态显示DOM元素
+//
+//     // 根据赢家显示游戏结束信息
+//     endOfGameDom.classList.remove('hidden')
+//
+//     if (playerScore > gameOver) {
+//         loseFX.play()  // 播放输的音效
+//         gameDom.textContent = 'CPU赢得了游戏... 是否重新开始？'
+//     }
+//     else {
+//         winGameFX.play()  // 播放赢的音效
+//         gameDom.textContent = '你赢得了游戏！是否重新开始？'
+//     }
+//
+//     // 添加点击“重新开始”按钮的事件监听器
+//     document.querySelector('.play-again').addEventListener('click', () => {
+//         playAgain.play()  // 播放重新开始音效
+//         // 点击后隐藏游戏结束的元素
+//         endOfGameDom.classList.add('hidden')
+//         playerScore = 0  // 重置分数
+//         cpuScore = 0
+//         updateScores()  // 更新分数显示
+//         playerTurn = !playerTurn  // 切换回合
+//         newHand()  // 发新手牌
+//         if (!playerTurn) setTimeout(playCPU, cpuDelay)  // 如果是CPU回合，延迟执行CPU的回合
+//     })
+// }
+//
+//
+// //#region ////////CPU逻辑////////
+// // 让CPU根据“drawValue”决定是否抽卡
+// const letCpuDrawCards = () => {
+//     if (playPile[playPile.length - 1].drawValue > 0) {
+//         // 根据最后一张牌的drawValue，决定CPU抽多少张卡
+//         for (let i = 0; i < playPile[playPile.length - 1].drawValue; i++) {
+//             drawCard(cpuHand)  // 抽卡
+//         }
+//     }
+// }
+//
+// // CPU回合的处理逻辑
+// const playCPU = () => {
+//     if (!playerTurn && gameOn) {
+//         console.log('ai开始回合') // TODO: 调试输出，之后可以移除
+//
+//         // 根据最后一张出牌决定CPU可以出的牌
+//         const playable = determinePlayableCards()
+//
+//         // 如果没有可玩的牌
+//         if (playable.length === 0) {
+//             console.log('ai没有可以出的牌') // TODO: 调试输出，之后可以移除
+//             // CPU抽卡
+//             drawCard(aiHand)
+//             // 结束CPU回合
+//             setTimeout(() => {
+//                 console.log('ai结束回合') // TODO: 调试输出，之后可以移除
+//                 playerTurn = true  // 切换到玩家回合
+//                 return
+//             }, 500)
+//         }
+//         // 如果只有一张可玩的牌
+//         else if (playable.length === 1) {
+//             setTimeout(playaiCard, 300, playable[0])  // 延迟300ms出牌
+//         }
+//         // 如果有多张可玩的牌
+//         else if (playable.length > 1) {
+//             console.log('CPU有', playable.length, '张可玩的牌') // TODO: 调试输出，之后可以移除
+//             // 使用策略选择一张牌
+//             let chosenCard = runStrategist(playable)
+//             setTimeout(playaiCard, 300, chosenCard)  // 延迟300ms出牌
+//         }
+//     }

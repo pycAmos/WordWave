@@ -1,0 +1,245 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;  /* 禁止滚动条 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body {
+  font-family: Arial;
+  perspective: 100em;
+  background-size: 100% 100%;
+}
+
+/* CARDS STYLES */
+.card {
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 0.8em;
+  padding: 0.45em;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: 200ms;
+  position: relative;
+}
+
+.card .bckg {
+    width: 7.5em;
+    height: 11.5em;
+    border-radius: 0.5em;
+    overflow: hidden;
+    position: relative;
+    background-image: url('assets/images/Card_back.png');
+    background-size: 100% 100%;  /* 改为100%填充 */
+    background-position: center;
+}
+
+
+
+.game-field #piles_area {
+  position: relative;
+  border-radius: 6em;
+  transition: 200ms;
+}
+
+#draw_pile {
+  position: absolute;
+  left: 0.75em;
+  top: 0.75em;
+  transform: scale(0.75);
+  z-index: 10;
+  cursor: pointer;
+  width: 7.5em;
+  height: 11.5em;
+}
+
+#draw_pile .card.top-card,
+#draw_pile .card.pile {
+  position: absolute;
+  cursor: pointer;
+}
+
+#draw_pile .card.pile {
+  box-shadow: 0px 2px #fff, 0px 4px rgba(0,0,0,0.16), 0px 6px #fff, 0px 8px rgba(0,0,0,0.16);
+  transition: transform 0.2s ease;
+}
+
+#draw_pile .card.pile:hover {
+  transform: scale(1.1);
+}
+
+#draw_pile .card.top-card {
+  z-index: 100;
+  box-shadow: none;
+}
+
+#draw_pile .card.top-card:hover {
+  box-shadow: 0px 4px rgba(0,0,0,0.16);
+  cursor: pointer;
+  transform: translateY(1em);
+}
+
+.game-field {
+  width: 55%;               /* 或者一个固定宽度 */
+  height: 200%;              /* 或者一个固定高度 */
+  display: grid;
+  grid-template-columns: repeat(20, 1fr);
+  grid-template-rows: 18em 36em 18em;
+  margin: auto;             /* 自动水平和垂直居中 */
+  margin-top: -13em;  /* 向上偏移5em，可以根据需要调整 */
+}
+
+
+.game-field.perspective {
+  transform: rotateX(30deg);
+}
+
+#piles_area {
+  grid-area: 2/2;
+}
+
+#player {
+  grid-area: 3/2;
+}
+
+#player_left {
+  grid-area: 2/1;
+}
+
+#player_top {
+  grid-area: 1/2;
+}
+
+#player_right {
+  grid-area: 2/3;
+}
+
+.player_hand {
+  position: relative;
+}
+
+.player_hand .card {
+  position: absolute;
+}
+
+.player_hand .card:nth-child(1) {
+  left: 3.3em;
+}
+
+.player_hand .card:nth-child(2) {
+  left: 6.6em;
+}
+
+.player_hand .card:nth-child(3) {
+  left: 9.9em;
+}
+
+.player_hand .card:nth-child(4) {
+  left: 13.2em;
+}
+
+.player_hand .card:nth-child(5) {
+  left: 16.5em;
+}
+
+.player_hand .card:nth-child(6) {
+  left: 19.8em;
+}
+
+.player_hand .card:nth-child(7) {
+  left: 23.1em;
+}
+
+#player .player_hand {
+  display: flex;
+  gap: 0.75em;
+  justify-content: center;
+}
+
+.rotated {
+  transform: rotate(90deg);
+}
+
+#player .player_hand .card {
+  position: static;
+  cursor: pointer;
+}
+
+#player .player_hand .card:hover {
+  transform-origin: left bottom;
+  transform: rotate(-10deg) translateY(-0.5em);
+}
+
+#player .player_hand .card:hover ~ .card {
+  transform: translateX(0);
+}
+
+#player_left .player_hand {
+  transform-origin: left bottom;
+  transform: rotate(90deg) translateY(-15em);
+}
+
+#player_top .player_hand {
+  transform: translateY(1.5em);
+}
+
+#player_right .player_hand {
+  transform-origin: left bottom;
+  transform: rotate(-90deg) translate(-36em, 1.5em);
+}
+
+.hidden {
+  display: none;
+}
+
+.player_actions {
+  display: flex;
+  justify-content: space-evenly;
+  margin-bottom: 1.5em;
+}
+
+.hidden-buttons {
+  display: none;
+}
+
+.player_actions button {
+  background-color: #4CAF50;
+  color: white;
+  border: 1px solid #388E3C;
+  padding: 0.75em 1.5em;
+  font-size: 1.5em;
+  border-radius: 0.5em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 150px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.player_actions button:hover {
+  background-color: #45a049;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15), 0 2px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.player_actions button:active {
+  background-color: #388E3C;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(2px);
+}
+
+#played_out_area {
+  grid-area: 2/2;
+  position: relative;
+  background-color: transparent;  /* 背景透明 */
+  border: none;                   /* 去掉白色边框 */
+  padding: 3em;
+  box-shadow: 0px 12px 24px rgba(0,0,0,0.2);  /* 阴影效果 */
+  border-radius: 25px;  /* 圆角 */
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
