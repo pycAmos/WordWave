@@ -97,6 +97,8 @@ async function detectPungWord() {
             gameOver = true;
             showMessage('You Won the Game!');
             updateGameStatus('Game over.');
+            alert("Wanna Play Again?");
+            location.reload();
             return true;
         }
 
@@ -570,6 +572,8 @@ async function playOut() {
         gameOver = true;
         showMessage('You Won the Game!');
         updateGameStatus('Game over.');
+        alert("Wanna Play Again?");
+        location.reload();
         return;
     }
 
@@ -676,6 +680,8 @@ async function aiTurn() {
         gameOver = true;
         showMessage("The bot won the game!");
         updateGameStatus("Game over.");
+        alert("Wanna Play Again?");
+        location.reload();
         return;
     }
 
