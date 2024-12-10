@@ -1,2 +1,2 @@
 web: python app.py
-web: node game.js
+worker: node game.js
