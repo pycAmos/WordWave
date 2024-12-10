@@ -14,11 +14,20 @@ deploy:
   only:
     - main
   before_script:
-    # 确保安装 Cython 以及其他依赖
-    - pip install --no-cache-dir Cython  # 先安装 Cython
+    # 安装 Cython 和其他必要依赖
+    - pip install --no-cache-dir Cython
     - pip show Cython  # 验证 Cython 是否已正确安装
-    - pip install --no-cache-dir -r requirements.txt  # 安装 requirements.txt 中的所有依赖
-    - apt-get update && apt-get install -y build-essential git  # 安装必要的系统依赖
+
+    # 安装 JDK 以支持 jnius
+    - apt-get update && apt-get install -y openjdk-11-jdk build-essential git  # 安装 JDK
+    - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64  # 设置 JAVA_HOME
+    - export JDK_HOME=$JAVA_HOME  # 设置 JDK_HOME
+    - export PATH=$JAVA_HOME/bin:$PATH  # 更新 PATH 以使用 JDK
+
+    # 安装 Python 依赖
+    - pip install --no-cache-dir -r requirements.txt
+
+    # 设置 SSH 配置
     - mkdir -p ~/.ssh  # 创建 SSH 目录
     - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa  # 写入私钥
     - chmod 600 ~/.ssh/id_rsa  # 设置私钥权限
