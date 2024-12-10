@@ -576,6 +576,7 @@ async function playOut() {
         return;
     }
 
+
     currentPlayer = 'ai';
     updateGameStatus('It’s Bot’s turn');
     setTimeout(aiTurn, 1000);
