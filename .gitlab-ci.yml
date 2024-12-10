@@ -17,6 +17,6 @@ deploy:
     - pip install Cython
     - apt-get update && apt-get install -y build-essential git
   script:
-    # 执行 git-push 部署命令
-    - git-push ssh://dokku@172.23.66.238:22/team-project-4
+    # 使用标准的 git push 命令
+    - git push ssh://dokku@172.23.66.238:22/team-project-4
 
