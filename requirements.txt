@@ -39,3 +39,5 @@ urllib3_secure_extra==0.1.0
 watchdog==6.0.0
 xmlrpclib==1.0.1
 xx==3.3.2
+psycopg2-binary
+
