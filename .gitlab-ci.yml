@@ -3,6 +3,7 @@ stages:
 
 variables:
   APP_NAME: team-project-4
+  SSH_HOST: "172.23.66.238"  # 确保这里设置为正确的远程服务器地址
 
 deploy:
   image: python:3.10
@@ -18,6 +19,7 @@ deploy:
     - mkdir -p ~/.ssh
     - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
+    - echo "Host $SSH_HOST" >> ~/.ssh/config
     - ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
   script:
     - git checkout main
