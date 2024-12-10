@@ -12,5 +12,9 @@ deploy:
     url: http://172.23.66.238:58062
   only:
     - main
+  before_script:
+    # 安装 Cython 和构建工具
+    - pip install Cython
+    - apt-get update && apt-get install -y build-essential
   script:
     - git-push ssh://dokku@172.23.66.238:22/team-project-4
