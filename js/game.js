@@ -567,6 +567,7 @@ async function playOut() {
 
     checkForSpecialWord();
 
+
     if (playerHand.length === 0) {
         gameOver = true;
         showMessage('You Won the Game!');
