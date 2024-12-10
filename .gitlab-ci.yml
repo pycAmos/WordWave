@@ -5,7 +5,7 @@ variables:
   APP_NAME: team-project-4
 
 deploy:
-  image: python:3.10  # 使用 Python 官方镜像，包含 pip
+  image: python:3.10  # 使用 Python 官方镜像
   stage: deploy
   environment:
     name: production
@@ -15,7 +15,8 @@ deploy:
   before_script:
     # 安装 Cython 和构建工具
     - pip install Cython
-    - apt-get update && apt-get install -y build-essential
+    - apt-get update && apt-get install -y build-essential git
   script:
+    # 执行 git-push 部署命令
     - git-push ssh://dokku@172.23.66.238:22/team-project-4
 
