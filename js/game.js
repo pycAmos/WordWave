@@ -205,7 +205,7 @@ async function pung() {
 
 
 function applyPungPenalty() {
-    console.log("PUNG failed! Drawing 2 penalty cards...");
+    console.log("PUNG failed! Drawing n penalty cards...");
     for (let i = 0; i < 2; i++) {
         if (deck.length > 0) {
             playerHand.push(deck.pop());
@@ -489,7 +489,6 @@ async function playOut() {
     if (gameOver || selectedCards.length === 0 || isPungActive) return;
 
     const firstCard = selectedCards[0];
-
     // 检查选中的第一张牌是否符合 reference card
     if (!canPlayCard(firstCard)) {
         showMessage('The first selected card does not match the reference card. Please check the rules.');
@@ -650,6 +649,9 @@ async function aiTurn() {
             showMessage("AI failed to satisfy the penalty! It has drawn penalty cards.");
             updateGameStatus("It's your turn.");
             currentPlayer = "player";
+            //新增2⬇️
+            playerTurn(); // 显式调用 playerTurn
+            //新增2⬆️
             return;
         }
     }
@@ -679,9 +681,9 @@ async function aiTurn() {
     if (aiHand.length === 0) {
         gameOver = true;
         showMessage("The bot won the game!");
-        updateGameStatus("Game over.");
         alert("Wanna Play Again?");
         location.reload();
+        updateGameStatus("Game over.");
         return;
     }
 
@@ -835,10 +837,47 @@ function updateBaseNumberUI() {
 }
 
 // 玩家回合逻辑
-function playerTurn() {
+async function playerTurn() {
     if (currentPlayer !== 'player' || gameOver) return;
     isPungActive = false;
     canPung = true; // 设置可以使用 PUNG 功能
+    // 新增1⬇️ 基数惩罚情况下检查是否有可出牌
+    if (penaltyActive && penaltyTarget === "player") {
+        const playableCards = playerHand.filter(card => canPlayCard(card));
+        if (playableCards.length === 0) {
+            // 玩家无可出的牌，直接进入罚牌逻辑
+            showMessage('You have no playable cards to satisfy the penalty. Drawing penalty cards...');
+            drawPenaltyCards(playerHand, penaltyDrawCount); // 自动罚牌两张
+            penaltyActive = false; // 清除基数惩罚状态
+            penaltyTarget = null;
+            currentPlayer = "ai"; // 转移到 AI 回合
+            updateGameStatus("It’s Bot’s turn.");
+            setTimeout(aiTurn, 1000); // 触发 AI 回合
+            return; // 提前结束玩家逻辑
+        }
+
+        // 有可出的牌，调用 AI 验词逻辑检查是否能组成合法单词
+        const allCombos = getAllCombos(playableCards);
+        const validCombos = await getValidCombos(allCombos);
+        const validPenaltyCombos = validCombos.filter(combo => combo.length >= penaltyCardCount);
+
+        if (validPenaltyCombos.length === 0) {
+            // 无法组成满足基数要求的单词，自动接受罚牌
+            showMessage('You cannot form a valid word of 3 or more cards. Drawing penalty cards...');
+            drawPenaltyCards(playerHand, penaltyDrawCount); // 自动罚牌两张
+            penaltyActive = false; // 清除基数惩罚状态
+            penaltyTarget = null;
+            currentPlayer = "ai"; // 转移到 AI 回合
+            updateGameStatus("It’s Bot’s turn.");
+            setTimeout(aiTurn, 1000); // 触发 AI 回合
+            return; // 提前结束玩家逻辑
+        }
+
+        // 如果能组成符合基数要求的单词，允许玩家自行选择出牌
+        showMessage('You can form a valid word of 3 or more cards. Please select your cards to play.');
+        return; // 不自动出牌，允许玩家操作
+    }
+    // 新增1结束⬆️
     updateGameStatus('It\'s your turn');
     if (!hasPlayableCard()) {
         showMessage('You don\'t have any playable cards. Please click the DRAW button to draw a card.');
@@ -930,5 +969,3 @@ function initializeGame() {
 }
 
 window.onload = initializeGame;
-
-
