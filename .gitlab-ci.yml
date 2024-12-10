@@ -14,15 +14,18 @@ deploy:
   only:
     - main
   before_script:
-    - pip install Cython
-    - pip show Cython  # 确保 Cython 已正确安装
-    - apt-get update && apt-get install -y build-essential git
-    - mkdir -p ~/.ssh
-    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
-    - echo "Host $SSH_HOST" >> ~/.ssh/config
-    - ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
+    # 确保安装 Cython 以及其他依赖
+    - pip install --no-cache-dir Cython  # 先安装 Cython
+    - pip show Cython  # 验证 Cython 是否已正确安装
+    - pip install --no-cache-dir -r requirements.txt  # 安装 requirements.txt 中的所有依赖
+    - apt-get update && apt-get install -y build-essential git  # 安装必要的系统依赖
+    - mkdir -p ~/.ssh  # 创建 SSH 目录
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa  # 写入私钥
+    - chmod 600 ~/.ssh/id_rsa  # 设置私钥权限
+    - echo "Host $SSH_HOST" >> ~/.ssh/config  # 配置 SSH 主机
+    - ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts  # 获取远程服务器的 SSH 密钥
   script:
-    - git checkout main
-    - git push ssh://dokku@172.23.66.238:22/team-project-4
+    - git checkout main  # 切换到 main 分支
+    - git pull origin main  # 拉取最新的代码
+    - git push ssh://dokku@172.23.66.238:22/team-project-4  # 将代码推送到远程服务器
 
