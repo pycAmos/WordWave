@@ -5,6 +5,9 @@ from database import is_valid_word  # 从 database.py 导入
 app = Flask(__name__)
 CORS(app)
 
+
+
+
 @app.route('/validate', methods=['GET'])
 def validate_word():
     """

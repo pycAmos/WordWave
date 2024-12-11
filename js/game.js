@@ -941,7 +941,7 @@ function applyPenalty(targetPlayer) {
 // 调用flask
 async function validateWord(word) {
     try {
-        const response = await fetch(`http://127.0.0.1:5001/validate?word=${encodeURIComponent(word.toLowerCase())}`);
+        const response = await fetch(`http://127.0.0.1:58062/validate?word=${encodeURIComponent(word.toLowerCase())}`);
         if (!response.ok) {
             throw new Error(`Error: ${response.status} ${response.statusText}`);
         }
