@@ -3,6 +3,7 @@ stages:
 
 variables:
   APP_NAME: team-project-4
+  GIT_STRATEGY: clone
   GIT_DEPTH: 0
 
 deploy:
@@ -13,5 +14,7 @@ deploy:
     url: http://172.23.66.238:58062
   only:
     - main
+  before_script:
+    - git fetch --unshallow || true
   script:
-    - git-push ssh://dokku@172.23.66.238:22/team-project-4 main:main
+    - git-push ssh://dokku@172.23.66.238:22/$APP_NAME main:main
