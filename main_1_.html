@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordWave™</title>
+    <style>
+        /* 设置整个页面和iframe的样式 */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            scroll-behavior: smooth; /* Smooth scrolling effect */
+        }
+
+          section {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .guide {
+            background-color: #000000; /* Black background */
+            color: #ffffff; /* White text */
+            font-family: Arial, sans-serif;
+            text-align: left;
+            padding: 40px;
+            overflow-y: auto; /* Enable scrolling for long content */
+            box-sizing: border-box;
+        }
+
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        /* Logo的样式 */
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 200px; /* 可以根据需求调整 */
+            z-index: 10;
+        }
+        /* 按钮的样式 */
+      
+        .button:hover {
+            background-color: #333333; /* 悬停时的深灰色 */
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3); /* 增强阴影效果 */
+        }
+
+        .guide-content {
+            max-width: 800px;
+            margin: auto;
+            line-height: 1.6;
+        }
+        
+        /* Button container for Beginner's Guide */
+        .button-guide {
+            position: absolute;
+            bottom: 20px; /* Adjust bottom position */
+            left: 50%;
+            padding: 12px 24px;
+            font-size: 30px;
+            font-family: 'PT Serif', serif; /* 使用PT Serif字体 */
+            font-weight: bold; /* 字体加粗 */
+            background-color: transparent; /* 无色背景 */
+            color: #ffffff; /* 白字 */
+            border: none; /* 去除边框 */
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* 添加阴影以营造凸起效果 */
+            animation: flash 1s infinite; /* 应用闪烁动画，1秒循环 */
+            transform: scale(1.8); /* 放大整个按钮 */
+        }
+
+        /* 定义闪烁动画 */
+        @keyframes flash {
+            0%, 100% {
+                opacity: 1; /* 完全显示 */
+            }
+            50% {
+                opacity: 0; /* 隐藏 */
+            }
+        }
+
+
+        .button-start {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            padding: 18px 36px; /* 调整内边距以适应更大的按钮 */
+            font-size: 50px; /* 增大字体大小 */
+            font-family: 'PT Serif', serif; /* 使用PT Serif字体 */
+            font-weight: bold; /* 字体加粗 */
+            background-color: transparent; /* 无色背景 */
+            color: #ffffff; /* 白字 */
+            border: none; /* 去除边框 */
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3); /* 增强阴影效果 */
+            transition: all 0.3s;
+            transform: scale(1.8); /* 放大整个按钮 */
+        }
+
+        /* Back to Main Button */
+        .back-main {
+            position: absolute;
+            top: 20px; /* Adjust top position */
+            left: 50%;
+            padding: 12px 24px;
+            font-size: 30px;
+            font-family: 'PT Serif', serif; /* 使用PT Serif字体 */
+            font-weight: bold; /* 字体加粗 */
+            background-color: transparent; /* 无色背景 */
+            color: #ffffff; /* 白字 */
+            border: none; /* 去除边框 */
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* 添加阴影以营造凸起效果 */
+            animation: flash 1s infinite; /* 应用闪烁动画，1秒循环 */
+            transform: scale(1.8); /* 放大整个按钮 */
+        }
+
+        /* 定义闪烁动画 */
+        @keyframes flash {
+            0%, 100% {
+                opacity: 1; /* 完全显示 */
+            }
+            50% {
+                opacity: 0; /* 隐藏 */
+            }
+        }
+
+
+
+    </style>
+</head>
+<body>
+    <!-- Main Page -->
+    <section class="main" id="main">
+        <img src="assets/images/logo.png" alt="Logo" class="logo">
+        <iframe src="https://my.spline.design/fintechcardlandingrevolutredesign-a1d6e7252561300ce033375308617d3d/" frameborder="0"></iframe>
+         <!-- Beginner's Guide Button (centered at the bottom) -->
+   		 <div class="button-guide">
+        	<button class="button" onclick="location.href='#guide'">▼</button>
+   		 </div>
+
+    <!-- Game Start Button (bottom right) -->
+    	<div class="button-start">
+        	<button class="button" onclick="window.location.href='game.html'">Game Start!</button>
+    	</div>
+    </section>
+
+    <!-- Beginner's Guide Page -->
+    <section class="guide" id="guide">
+        <div class="guide-content">
+            <h1>WordWave Beginner's Guide</h1>
+            <p> Welcome to WordWave! Here you can learn how to play the game:</p>
+            <p> The player who plays out all their cards first wins!</p>
+            <p>
+                There are six colors of cards, each containing the 26 letters of the alphabet.
+                Black cards are special function cards and can be played regardless of the reference card’s color or letter.</p> 
+            <p> 
+                At the start of the game, each player is randomly dealt 7 cards as their hand.
+                Then, one card is dealt as the reference card. Cards played by players will be arranged from left to right, with the card played out last becoming the new reference card.</p> 
+                
+            <p><strong>Playing Cards</strong></p>
+                <p>You must play cards based on the color or letter of the reference card. The rules for playing cards are as follows:</p>
+                <ul>
+                    <li>Playing out a Single Card</li>
+                    <p>If you cannot form a word with your hand, you can play a single card based on the reference card.</p>
+                
+                    <p>The card you play must match the reference card in either color or letter. Select the card you want to play out and click the "Play Out" button on the right side of the screen.</p>
+                
+                    <li>Playing out cards that form a Complete Word</li>
+                
+                    <p>If the reference card is a red W, you can play out cards that form a complete word under the following conditions:</p>
+                
+                    <p>If you have D, O, and G in your hand, and the D is either red or black, you can play out all three cards to form the word "DOG". If the D is neither red nor black, you must wait for the right opportunity to play.</p>
+                    <p>If you have W, H, and Y, you can play out all three cards to form the word "WHY", regardless of the W’s color, because the W matches the reference card’s letter.</p>
+                    <p>If the cards you play do not form a valid word, not only will you fail to play them, but you will also be penalized with 1 additional card from the deck.</p>
+                
+                    <li>PUNG Button</li>
+                
+                    <p>You can also play cards using the PUNG function based on the reference card’s color or letter:</p>
+                
+                    <p>After another player finishes their turn, the turn moves to you. If you click the PUNG button, the system will give you 5 seconds to complete the PUNG operation.</p>
+                    <p>For example:</p>
+                    <p>If the last card played by another player is a red G, and you have O, O, and D in your hand, you can click the PUNG button and play all three cards within 5 seconds to form the word "GOOD".
+                    Before clicking the PUNG button, you have unlimited time to select your cards. The 5-second countdown only starts after you click the button.
+                    As long as your cards meet the play requirements, you can use the PUNG function repeatedly.
+                    If your cards do not form a valid word together with the reference card, you will be penalized with 2-4 cards randomly.</p></ul>
+                
+            <p><strong>Drawing Cards</strong></p>
+                <p>If none of the above play options are available, you must draw a card from the deck.</p>
+                <p>If the drawn card matches the "Playing out a Single Card" rules mentioned above, you must play it immediately.</p>
+                <p>After completing this action, click the "Play Out" button on the right side of the screen to end your turn.</p>
+                
+            <p><strong>Base Number</strong></p>
+                <p>The Base Number introduces penalties based on word length.</p>
+                <p>The base number is always 3. This means:</p>
+                <p>If a player forms a word with 4 or more letters, the other player must form a longer word in their next turn.</p>
+                <p>If a player fails to form a longer word, they will be penalized with 2 additional cards.</p>
+                
+            <p><strong>Ending the Game</strong></p>
+                <p>The game ends when any player plays out all their cards.</p>
+                <p>You can click the button in the pop-up window to start a new round.</p>
+        </div>
+        <div class="back-main">
+            <button class="button" onclick="location.href='#main'">▲</button>
+        </div>
+    </section>
+</body>
+</html>
