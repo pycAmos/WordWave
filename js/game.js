@@ -216,7 +216,7 @@ function applyPungPenalty() {
     }
     updatePlayerHandUI();
     updateDeckCount();
-    showMessage("PUNG failed! You have drawn 2 penalty cards.", 3000);
+    showMessage("PUNG failed! You have drawn n penalty cards.", 3000);
 
     const playOutButton = document.getElementById('playout-button');
     if (playOutButton) {
@@ -487,6 +487,7 @@ async function playOut() {
         return; // 如果被禁用，则直接返回
     }
     if (gameOver || selectedCards.length === 0 || isPungActive) return;
+    checkForSpecialWord(); //仅测试
 
     const firstCard = selectedCards[0];
     // 检查选中的第一张牌是否符合 reference card
@@ -565,8 +566,7 @@ async function playOut() {
 
     updateCurrentCardUI();
 
-    checkForSpecialWord();
-
+    // checkForSpecialWord();
 
     if (playerHand.length === 0) {
         gameOver = true;
@@ -576,8 +576,6 @@ async function playOut() {
         location.reload();
         return;
     }
-
-
 
     currentPlayer = 'ai';
     updateGameStatus('It’s Bot’s turn');
@@ -694,7 +692,6 @@ async function aiTurn() {
     currentPlayer = "player";
     updateGameStatus("It’s your turn.");
 }
-
 
 function getAllCombos(cards, referenceCard) {
     // 使用 canPlayCard 过滤符合 referenceCard 的卡牌
