@@ -39,7 +39,7 @@ if __name__ == "__main__":
             return self.app
 
     options = {
-        "bind": "127.0.0.1:5001",
+        "bind": "0.0.0.0:58062",
         "workers": 4,
     }
     GunicornApp(app, options).run()
