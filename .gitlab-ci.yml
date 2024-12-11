@@ -13,4 +13,4 @@ deploy:
   only:
     - main
   script:
-    - git-push ssh://dokku@172.23.66.238:22/team-project-4
+    - git-push ssh://dokku@172.23.66.238:22/team-project-4 main:main
