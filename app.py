@@ -36,4 +36,4 @@ def validate_word():
 
 # 主程序入口
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=58062)
+    app.run(host='0.0.0.0', port=5000)
