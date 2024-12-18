@@ -236,23 +236,23 @@ function createDeck() {
     colors.forEach(color => {
         // 每个字母的牌
         letters.forEach(letter => {
-            deck.push({ color, letter, img: `assets/images/cards/${letter}_${color}.png` });
+            deck.push({ color, letter, img: `../images/cards/${letter}_${color}.png` });
         });
         // 元音
         vowels.forEach(vowel => {
             for (let i = 0; i < 3; i++) {
-                deck.push({ color, letter: vowel, img: `assets/images/cards/${vowel}_${color}.png` });
+                deck.push({ color, letter: vowel, img: `../images/cards/${vowel}_${color}.png` });
             }
         });
     });
 
     // 创建黑色功能牌
     letters.forEach(letter => {
-        deck.push({ color: 'Black', letter, img: `assets/images/cards/${letter}_Black.png` });
+        deck.push({ color: 'Black', letter, img: `../images/cards/${letter}_Black.png` });
     });
     vowels.forEach(vowel => {
         for (let i = 0; i < 3; i++) {
-            deck.push({ color: 'Black', letter: vowel, img: `assets/images/cards/${vowel}_Black.png` });
+            deck.push({ color: 'Black', letter: vowel, img: `../images/cards/${vowel}_Black.png` });
         }
     });
 }
@@ -383,7 +383,7 @@ function updateAIHandUI() {
 
     aiHand.forEach(() => {
         const img = document.createElement('img');
-        img.src = 'assets/images/Card_back.png'; 
+        img.src = '../images/Card_back.png'; 
         img.alt = 'AI Card';
         aiHandDiv.appendChild(img);
     });

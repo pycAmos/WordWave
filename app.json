@@ -1,0 +1,12 @@
+{
+    "healthchecks": {
+      "web": {
+        "path": "/",
+        "timeout": 10,
+        "interval": 5,
+        "success": 1,
+        "failure": 2
+      }
+    }
+  }
+  
