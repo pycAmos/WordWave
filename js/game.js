@@ -6,7 +6,7 @@ let discardPile = [];
 let playerHand = [];
 let aiHand = [];
 let currentCard = null;
-let baseNumber = 1;
+let baseNumber = 3;
 let currentPlayer = 'player'; 
 let gameOver = false;
 let selectedCards = [];
@@ -531,16 +531,16 @@ async function playOut() {
     // **处理基数惩罚逻辑**
     if (penaltyActive && penaltyTarget === "player") {
         if (selectedCards.length >= penaltyCardCount) {
-            console.log("Player satisfied penalty. Passing penalty to AI.");
+            console.log("Player satisfied penalty. Passing penalty to Bot.");
             penaltyTarget = "ai"; // 惩罚转移给 AI
-            showMessage("You satisfied the penalty! Now AI must play at least 3 cards.");
+            showMessage("You satisfied the penalty! Now Bot must play at least 3 cards.");
         } else {
             console.log("Player failed to satisfy penalty. Drawing penalty cards...");
             drawPenaltyCards(playerHand, penaltyDrawCount);
             penaltyActive = false; // 清除惩罚状态
             penaltyTarget = null;
             showMessage("You failed to satisfy the penalty! You have drawn penalty cards.");
-            updateGameStatus("It's AI's turn.");
+            updateGameStatus("It's Bot's turn.");
             currentPlayer = "ai";
             setTimeout(aiTurn, 1000);
             return;
@@ -549,7 +549,7 @@ async function playOut() {
         // 如果没有惩罚状态，但玩家打出足够的牌，启动基数惩罚逻辑
         penaltyActive = true;
         penaltyTarget = "ai";
-        console.log("Player triggered penalty for AI.");
+        console.log("Player triggered penalty for Bot.");
         showMessage("You have triggered the penalty! The bot must play at least 3 cards.");
     }
 
@@ -586,7 +586,7 @@ async function playOut() {
 
 // AI回合 + 加入基数惩罚的处理逻辑
 async function aiTurn() {
-    console.log("AI is thinking...");
+    console.log("Bot is thinking...");
     if (currentPlayer !== "ai" || gameOver) return;
 
     // 获取符合 reference card 的可用卡片
@@ -601,19 +601,19 @@ async function aiTurn() {
             aiHand.push(penaltyCard);
             updateDeckCount();
             updateAIHandUI();
-            showMessage("AI has no playable cards and draws 1 card.");
+            showMessage("Bot has no playable cards and draws 1 card.");
 
             // 重新检查罚完牌后是否可以出牌
             playableCards = aiHand.filter(card => canPlayCard(card));
             if (playableCards.length === 0) {
-                console.warn("AI still has no playable cards after drawing.");
+                console.warn("Bot still has no playable cards after drawing.");
                 currentPlayer = "player";
                 updateGameStatus("It's your turn.");
                 return;
             }
         } else {
             // 如果牌堆为空，直接结束回合
-            console.warn("Deck is empty! AI cannot draw cards.");
+            console.warn("Deck is empty! Bot cannot draw cards.");
             currentPlayer = "player";
             updateGameStatus("It's your turn.");
             return;
@@ -628,26 +628,26 @@ async function aiTurn() {
 
     // **处理基数惩罚逻辑**
     if (penaltyActive && penaltyTarget === "ai") {
-        console.log("Penalty active for AI. AI must play at least 3 cards.");
+        console.log("Penalty active for Bot. Bot must play at least 3 cards.");
         const penaltyCombos = validCombos.filter(combo => combo.length >= penaltyCardCount);
 
         if (penaltyCombos.length > 0) {
             penaltyCombos.sort((a, b) => b.length - a.length); // 选择最长的组合
             const bestPenaltyCombo = penaltyCombos[0];
-            console.log("AI satisfied penalty with:", bestPenaltyCombo);
+            console.log("Bot satisfied penalty with:", bestPenaltyCombo);
 
             processAIPlay(bestPenaltyCombo);
 
             // 转移惩罚状态给玩家
             penaltyTarget = "player"; // 转移惩罚状态给玩家
-            showMessage("AI satisfied the penalty! Now you must play at least 3 cards.");
+            showMessage("Bot satisfied the penalty! Now you must play at least 3 cards.");
             return;
         } else {
-            console.log("AI failed to satisfy penalty. Drawing penalty cards...");
+            console.log("Bot failed to satisfy penalty. Drawing penalty cards...");
             drawPenaltyCards(aiHand, penaltyDrawCount);
             penaltyActive = false; // 清除惩罚状态
             penaltyTarget = null;
-            showMessage("AI failed to satisfy the penalty! It has drawn penalty cards.");
+            showMessage("Bot failed to satisfy the penalty! It has drawn penalty cards.");
             updateGameStatus("It's your turn.");
             currentPlayer = "player";
             //新增2⬇️
@@ -661,7 +661,7 @@ async function aiTurn() {
     if (validCombos.length > 0) {
         validCombos.sort((a, b) => b.length - a.length);
         const bestCombo = validCombos[0];
-        console.log("AI played a valid word:", bestCombo);
+        console.log("Bot played a valid word:", bestCombo);
 
         processAIPlay(bestCombo);
 
@@ -669,13 +669,13 @@ async function aiTurn() {
         if (bestCombo.length >= penaltyCardCount) {
             penaltyActive = true;
             penaltyTarget = "player";
-            showMessage("AI triggered the penalty! You must play at least 3 cards.");
+            showMessage("Bot triggered the penalty! You must play at least 3 cards.");
         }
     } else {
         // 没有合法组合，随机出一张牌
         const singleCard = playableCards[0];
         processAIPlay([singleCard]);
-        console.log(`AI played a single card: ${singleCard.letter}`);
+        console.log('Bot played a single card: ${singleCard.letter}');
     }
 
     // 检查游戏是否结束
@@ -920,10 +920,10 @@ function applyPenalty(targetPlayer) {
 
         // 转移回合到 AI
         currentPlayer = 'ai';
-        updateGameStatus('The bot\'s turn after penalty.');
+        updateGameStatus('Bot\'s turn after penalty.');
         setTimeout(aiTurn, 1000); // 触发 AI 回合
     } else {
-        showMessage(`The bot failed to meet the penalty and has drawn ${penaltyCount} card${penaltyCount > 1 ? 's' : ''}!`);
+        showMessage(`Bot failed to meet the penalty and has drawn ${penaltyCount} card${penaltyCount > 1 ? 's' : ''}!`);
         updateAIHandUI();
 
         // 转移回合到玩家
@@ -941,7 +941,7 @@ function applyPenalty(targetPlayer) {
 // 调用flask
 async function validateWord(word) {
     try {
-        const response = await fetch(`http://127.0.0.1:58062/validate?word=${encodeURIComponent(word.toLowerCase())}`);
+        const response = await fetch(`http://172.23.66.238:58062/validate?word=${encodeURIComponent(word.toLowerCase())}`);
         if (!response.ok) {
             throw new Error(`Error: ${response.status} ${response.statusText}`);
         }

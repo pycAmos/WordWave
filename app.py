@@ -1,13 +1,23 @@
-from flask import Flask, jsonify, request
+from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS
 from database import is_valid_word  # 从 database.py 导入
 
-app = Flask(__name__)
+# 初始化 Flask 应用
+app = Flask(__name__, static_folder='assets', template_folder='.')
+# 允许所有域进行跨域请求
 CORS(app)
 
+# 根路径 "/"：显示 main.html 页面
+@app.route('/')
+def home():
+    return render_template('main.html')
 
+# "/game" 路径：显示 game.html 页面
+@app.route('/game')
+def game():
+    return render_template('game.html')
 
-
+# "/validate" 路径：检查单词有效性
 @app.route('/validate', methods=['GET'])
 def validate_word():
     """
@@ -24,25 +34,6 @@ def validate_word():
     is_valid = is_valid_word(word)
     return jsonify({"word": word, "is_valid": is_valid})
 
-
+# 主程序入口
 if __name__ == "__main__":
-    from gunicorn.app.base import BaseApplication
-
-    class GunicornApp(BaseApplication):
-        def __init__(self, app, options=None):
-            self.app = app
-            self.options = options or {}
-            super().__init__()
-
-        def load_config(self):
-            for key, value in self.options.items():
-                self.cfg.set(key.lower(), value)
-
-        def load(self):
-            return self.app
-
-    options = {
-        "bind": "0.0.0.0:5000",
-        "workers": 4,
-    }
-    GunicornApp(app, options).run()
+    app.run(host='0.0.0.0', port=58062)
