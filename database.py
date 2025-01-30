@@ -1,7 +1,7 @@
 from psycopg2.pool import SimpleConnectionPool
 
 # 数据库连接信息
-DB_URI = "postgres://postgres:2c32df78381f2d250eec67f742622fd7@172.23.66.238:52031/team_project_4_db"
+DB_URI = "postgresql://readonly_user1:WordWave126@ep-soft-frog-a9mom2b2-pooler.gwc.azure.neon.tech/neondb?sslmode=require"
 
 # 初始化连接池
 pool = SimpleConnectionPool(1, 20, DB_URI)  # 最小1个连接，最大20个连接

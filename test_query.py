@@ -1,6 +1,6 @@
 import psycopg2
 
-DB_URI = "postgres://postgres:2c32df78381f2d250eec67f742622fd7@172.23.66.238:52031/team_project_4_db"
+DB_URI = "postgresql://readonly_user1:WordWave126@ep-soft-frog-a9mom2b2-pooler.gwc.azure.neon.tech/neondb?sslmode=require"
 
 def test_query(word):
     try:

@@ -3,7 +3,7 @@ from flask_cors import CORS
 from database import is_valid_word  # 从 database.py 导入
 
 # 初始化 Flask 应用
-app = Flask(__name__, static_folder='assets', template_folder='.')
+app = Flask(__name__, static_folder='../assets', template_folder='../templates')
 # 允许所有域进行跨域请求
 CORS(app)
 
