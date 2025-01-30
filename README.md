@@ -6,7 +6,7 @@ quickly as possible, based on two established card-playing rules and other strat
 ---------------------------------------------------------------
 ## Welcome to WordWave! Here you can learn how to play the game:
 
-[Or see the guideline in pages](word-wave-chi.vercel.app)
+[Or see the guideline in pages](http://word-wave-chi.vercel.app)
 
 The player who plays out all their cards first wins!
 
