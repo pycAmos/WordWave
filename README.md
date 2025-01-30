@@ -6,6 +6,8 @@ quickly as possible, based on two established card-playing rules and other strat
 ---------------------------------------------------------------
 ## Welcome to WordWave! Here you can learn how to play the game:
 
+[Or see the guideline in pages](word-wave-chi.vercel.app)
+
 The player who plays out all their cards first wins!
 
 There are six colors of cards, each containing the 26 letters of the alphabet. Black cards are special function cards and can be played regardless of the reference card’s color or letter.
